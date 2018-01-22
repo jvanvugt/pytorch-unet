@@ -25,6 +25,8 @@ class UNet(nn.Module):
             padding (bool): if True, apply padding such that the input shape
                             is the same as the output.
                             This may introduce artifacts
+            batch_norm (bool): Use BatchNorm after layers with an
+                               activation function
             up_mode (str): one of 'upconv' or 'upsample'.
                            'upconv' will use transposed convolutions for
                            learned upsampling.
