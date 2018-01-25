@@ -64,30 +64,6 @@ class UNet(nn.Module):
 
         return self.last(x)
 
-    def get_input_size_for(self, output_size):
-        """Return the input size necessary to get the desired output size
-        Args:
-            output_size (int or tuple(int, int)): desired output size (H, W)
-        """
-        if isinstance(output_size, int):
-            output_size = output_size, output_size
-        if self.padding:
-            return output_size
-        h, w = output_size
-
-        # up path
-        for _ in range(self.depth-1):
-            h, w = h+4, w+4
-            h, w = h//2, w//2
-        h, w = h+4, w+4
-
-        # down path
-        for _ in range(self.depth-1):
-            h, w = h*2, w*2
-            h, w = h+4, w+4
-
-        return h, w
-
 
 class UNetConvBlock(nn.Module):
     def __init__(self, in_size, out_size, padding, batch_norm):
