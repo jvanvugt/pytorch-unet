@@ -102,13 +102,14 @@ class UNetUpBlock(nn.Module):
         self.conv_block = UNetConvBlock(in_size, out_size, padding, batch_norm)
 
     def center_crop(self, layer, target_size):
-        batch_size, n_channels, layer_width, layer_height = layer.size()
-        xy1 = (layer_width - target_size) // 2
-        return layer[:, :, xy1:(xy1 + target_size), xy1:(xy1 + target_size)]
+        _, _, layer_height, layer_width = layer.size()
+        diff_y = (layer_height - target_size[0]) // 2
+        diff_x = (layer_width - target_size[1]) // 2
+        return layer[:, :, diff_y:(diff_y + target_size[0]), diff_x:(diff_x + target_size[1])]
 
     def forward(self, x, bridge):
         up = self.up(x)
-        crop1 = self.center_crop(bridge, up.size()[2])
+        crop1 = self.center_crop(bridge, up.shape[2:])
         out = torch.cat([up, crop1], 1)
         out = self.conv_block(out)
 
