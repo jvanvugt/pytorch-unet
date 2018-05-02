@@ -38,6 +38,29 @@ class UNet(nn.Module):
                            'upsample' will use bilinear upsampling.
         """
 ```
+An example of how to use the network
+```python
+import torch
+import torch.nn.functional as F
+from unet import UNet
+
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+model = UNet().to(device)
+optim = torch.optim.Adam(model.parameters())
+dataloader = ...
+epochs = 10
+
+for _ in range(epochs):
+    for X, y in dataloader:
+        X, y = X.to(device), y.to(device)
+        prediction = model(X)
+        loss = F.binary_cross_entropy_with_logits(prediction, y)
+
+        optim.zero_grad()
+        loss.backward()
+        optim.step()        
+```
+
 # Discussion of parameters/architecture
 Some of the architecture choices in other implementations (i.e. 'same' padding) differ from the original implementation. Unfortunately, the paper doesn't really go into detail on some these choices. But in practice, they can be quite important. Here I will discuss some settings and provide a recommendation for picking them.
 
