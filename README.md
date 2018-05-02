@@ -45,20 +45,21 @@ import torch.nn.functional as F
 from unet import UNet
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-model = UNet().to(device)
+model = UNet(n_classes=2, padding=True, up_mode='upsample').to(device)
 optim = torch.optim.Adam(model.parameters())
 dataloader = ...
 epochs = 10
 
 for _ in range(epochs):
     for X, y in dataloader:
-        X, y = X.to(device), y.to(device)
-        prediction = model(X)
-        loss = F.binary_cross_entropy_with_logits(prediction, y)
+        X = X.to(device) #  [N, 1, H, W]
+        y = y.to(device) #  [N, H, W] with class indices (0, 1)
+        prediction = model(X) #  [N, 2, H, W]
+        loss = F.cross_entropy(prediction, y)
 
         optim.zero_grad()
         loss.backward()
-        optim.step()        
+        optim.step()
 ```
 
 # Discussion of parameters/architecture
