@@ -52,9 +52,9 @@ epochs = 10
 
 for _ in range(epochs):
     for X, y in dataloader:
-        X = X.to(device) #  [N, 1, H, W]
-        y = y.to(device) #  [N, H, W] with class indices (0, 1)
-        prediction = model(X) #  [N, 2, H, W]
+        X = X.to(device)  # [N, 1, H, W]
+        y = y.to(device)  # [N, H, W] with class indices (0, 1)
+        prediction = model(X)  # [N, 2, H, W]
         loss = F.cross_entropy(prediction, y)
 
         optim.zero_grad()
