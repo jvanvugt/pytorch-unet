@@ -57,7 +57,7 @@ class UNet(nn.Module):
             x = down(x)
             if i != len(self.down_path)-1:
                 blocks.append(x)
-                x = F.avg_pool2d(x, 2)
+                x = F.max_pool2d(x, 2)
 
         for i, up in enumerate(self.up_path):
             x = up(x, blocks[-i-1])
